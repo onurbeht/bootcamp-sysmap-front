@@ -5,7 +5,12 @@ export default {
     container: {
       center: true,
     },
-    extend: {},
+    extend: {
+      backgroundImage: {
+        "home-image": "url('/home-image.jpg')",
+        "auth-image": "url('/auth-image.jpg')",
+      },
+    },
   },
   plugins: [],
 };
