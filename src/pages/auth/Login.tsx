@@ -1,5 +1,6 @@
 import { FormEvent, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuthContext } from "../../hooks/useAuthContext";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -7,18 +8,18 @@ const Login = () => {
 
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const { login } = useAuthContext();
+
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
 
-    const data = {
-      email,
-      password,
-    };
-
-    console.log(data);
+    await login(email, password);
 
     setLoading(false);
+    navigate("/");
   };
 
   return (
@@ -65,9 +66,9 @@ const Login = () => {
           <button
             type="submit"
             disabled={loading}
-            className=" text-violet-600 border-slate-700 border-2 rounded-full p-2 m-2 opacity-45 hover:opacity-100 hover:shadow-slate-50 hover:shadow-inner"
+            className=" text-violet-600 border-slate-700 border-2 rounded-full p-2 m-2 opacity-45 hover:opacity-100 hover:shadow-slate-50 hover:shadow-inner "
           >
-            Entrar
+            {!loading ? "Entrar" : "Aguarde..."}
           </button>
         </form>
 

@@ -1,7 +1,16 @@
 import { FormEvent, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { api_users } from "../../services/apiService";
+import { useAuthContext } from "../../hooks/useAuthContext";
+import { UserModel } from "../../models/UserModel";
 
-const register = () => {
+type CreateProps = {
+  username: string;
+  email: string;
+  password: string;
+};
+
+const Register = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -9,7 +18,11 @@ const register = () => {
 
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const { login } = useAuthContext();
+
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
 
@@ -19,15 +32,19 @@ const register = () => {
       return;
     }
 
-    const data = {
-      username,
-      email,
-      password,
-    };
+    await api_users
+      .post("/create", { username, email, password })
+      .then((res) => console.log(res.data))
+      .catch((erro) => {
+        setLoading(false);
+        console.log(erro.response.data);
+        return;
+      });
 
-    console.log(data);
+    await login(email, password);
 
     setLoading(false);
+    navigate("/");
   };
 
   return (
@@ -46,7 +63,7 @@ const register = () => {
           className="flex flex-col justify-center items-center border-slate-700 border-2 p-8 rounded-md mb-8 shadow-black shadow-2xl"
         >
           <label className="flex flex-col pb-2 text-violet-600 text-lg">
-            <span>Name</span>
+            <span>Nome</span>
             <input
               type="text"
               name="username"
@@ -99,9 +116,9 @@ const register = () => {
           <button
             type="submit"
             disabled={loading}
-            className=" text-violet-600 border-slate-700 border-2 rounded-full p-2 m-2 opacity-45 hover:opacity-100 hover:shadow-slate-50 hover:shadow-inner"
+            className=" text-violet-600 border-slate-700 border-2 rounded-full p-2 m-2 opacity-45 hover:opacity-100 hover:shadow-slate-50 hover:shadow-inner "
           >
-            Cadastrar
+            {!loading ? "Cadastrar" : "Aguarde..."}
           </button>
         </form>
 
@@ -116,4 +133,4 @@ const register = () => {
   );
 };
 
-export default register;
+export default Register;
