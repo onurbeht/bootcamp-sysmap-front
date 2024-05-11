@@ -2,13 +2,9 @@ import { FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { api_users } from "../../services/apiService";
 import { useAuthContext } from "../../hooks/useAuthContext";
-import { UserModel } from "../../models/UserModel";
 
-type CreateProps = {
-  username: string;
-  email: string;
-  password: string;
-};
+import { Button } from "@/components/ui/button";
+import { BsArrowClockwise } from "react-icons/bs";
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -48,7 +44,7 @@ const Register = () => {
   };
 
   return (
-    <div className="container min-h-screen max-h-screen w-screen max-w-full grid grid-cols-3 grid-flow-col items-center font-bold">
+    <div className=" min-h-screen max-h-screen w-screen max-w-full grid grid-cols-3 grid-flow-col items-center font-bold">
       <div className="bg-auth-image bg-cover bg-no-repeat max-w-full h-full col-span-2 grid grid-cols-3 grid-rows-3 grid-flow-col">
         <div className="col-start-2 w-50 h-20 bg-red-600 blur-3xl" />
         <div className="row-span-1 row-end-5 w-40 h-20 bg-yellow-200 blur-3xl" />
@@ -113,13 +109,16 @@ const Register = () => {
             />
           </label>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className=" text-violet-600 border-slate-700 border-2 rounded-full p-2 m-2 opacity-45 hover:opacity-100 hover:shadow-slate-50 hover:shadow-inner "
-          >
-            {!loading ? "Cadastrar" : "Aguarde..."}
-          </button>
+          {!loading ? (
+            <Button variant="outline" type="submit">
+              Cadastrar
+            </Button>
+          ) : (
+            <Button disabled>
+              <BsArrowClockwise className="mr-2 h-4 w-4 animate-spin" />{" "}
+              Aguarde...
+            </Button>
+          )}
         </form>
 
         <p>
