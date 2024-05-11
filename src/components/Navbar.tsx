@@ -7,7 +7,7 @@ import { BsHouseDoorFill, BsSpotify } from "react-icons/bs";
 import { useAuthContext } from "../hooks/useAuthContext";
 
 const Navbar = () => {
-  const { isAuthenticated, logout } = useAuthContext();
+  const { isAuthenticated } = useAuthContext();
 
   return (
     <nav className="max-w-full h-15 flex flex-row justify-between items-center text-violet-600 border-b-slate-700 border-b-2 font-bold  ">
@@ -24,9 +24,6 @@ const Navbar = () => {
           </li>
           <li>
             <NavLink to="/my-user">Perfil</NavLink>
-          </li>
-          <li onClick={() => logout()}>
-            <Link to="/login">Sair</Link>
           </li>
         </ul>
       ) : (
