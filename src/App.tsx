@@ -17,7 +17,7 @@ import { PrivateRoutes } from "./utils/PrivateRoutes";
 
 function App() {
   return (
-    <div className="max-w-full max-h-full text-slate-400">
+    <div className=" max-w-full max-h-full text-slate-400">
       <AuthProvider>
         <BrowserRouter>
           <Navbar />

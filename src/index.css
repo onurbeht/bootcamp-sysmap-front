@@ -1,14 +1,4 @@
 @tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Roboto", sans-serif;
-}
-
-.active {
-  filter: brightness(150%);
-}
+  @tailwind components;
+  @tailwind utilities;
+  
