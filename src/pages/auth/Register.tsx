@@ -5,6 +5,7 @@ import { useAuthContext } from "../../hooks/useAuthContext";
 
 import { Button } from "@/components/ui/button";
 import { BsArrowClockwise } from "react-icons/bs";
+import { useToast } from "@/components/ui/use-toast";
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -18,22 +19,24 @@ const Register = () => {
 
   const navigate = useNavigate();
 
+  const { toast } = useToast();
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
 
     if (password !== confirmPass) {
-      console.log("Senhas não são iguais");
+      toast({ title: "Senhas não são iguais" });
       setLoading(false);
       return;
     }
 
     await api_users
       .post("/create", { username, email, password })
-      .then((res) => console.log(res.data))
+      .then(() => toast({ title: "Conta criada" }))
       .catch((erro) => {
         setLoading(false);
-        console.log(erro.response.data);
+        toast({ title: erro.response.data });
         return;
       });
 

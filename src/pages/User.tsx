@@ -6,6 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { BsArrowClockwise, BsBoxArrowRight } from "react-icons/bs";
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/components/ui/use-toast";
 
 const User = () => {
   const [user, setUser] = useState<UserModel>();
@@ -18,6 +19,8 @@ const User = () => {
   const [walletBalance, setWalletbalance] = useState<number>(0);
 
   const { getToken, logout } = useAuthContext();
+
+  const { toast } = useToast();
 
   const getUserInfo: () => Promise<UserModel> = async () => {
     api_users.defaults.headers.common.Authorization = `Bearer ${getToken()}`;
@@ -35,7 +38,7 @@ const User = () => {
     setLoadingFormUser(true);
 
     if (password && password.length < 3) {
-      console.log("A senha precisa ter no minimo 3 caracteres!");
+      toast({ title: "A senha precisa ter no minimo 3 caracteres!" });
       setLoadingFormUser(false);
       return;
     }
@@ -44,18 +47,19 @@ const User = () => {
 
     if (password && username) data = { password, username };
     if (password && !username) data = { password, username: "" };
-    if (!password && !username) return console.log("nenhum dado foi alterado");
+    if (!password && !username)
+      return toast({ title: "nenhum dado foi alterado" });
 
     api_users.defaults.headers.common.Authorization = `Bearer ${getToken()}`;
 
-    const response = await api_users.put("/update/" + user?.id, data);
-
-    if (response.status === 204) console.log("dados atualizados");
-    if (response.status === 403) {
-      console.log(response);
-      setLoadingFormUser(false);
-      return;
-    }
+    await api_users
+      .put("/update/" + user?.id, data)
+      .then(() => toast({ title: "Dados atualizados" }))
+      .catch((error) => {
+        toast({ title: error.message });
+        setLoadingFormUser(false);
+        return;
+      });
 
     getUserInfo();
 
@@ -67,10 +71,8 @@ const User = () => {
     e.preventDefault();
     setLoadingFormWallet(true);
 
-    console.log("Entrou");
-
     if (walletBalance <= 0) {
-      console.log("Não é possivel depositar um valor negativo!");
+      toast({ title: "Não é possivel depositar um valor negativo!" });
       setLoadingFormWallet(false);
       return;
     }
@@ -78,16 +80,16 @@ const User = () => {
     api_wallet.defaults.headers.common.Authorization = `Bearer ${getToken()}`;
 
     const data = { value: walletBalance };
-    console.log("Enviando...");
+
     await api_wallet
       .post("/credit", data)
       .then(() => {
-        console.log("Saldo atualizado");
+        toast({ title: "Saldo atualizado" });
         getUserInfo();
         setLoadingFormWallet(false);
       })
       .catch((error) => {
-        console.log(error);
+        toast({ title: error });
         setLoadingFormWallet(false);
         return;
       });

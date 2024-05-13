@@ -15,6 +15,8 @@ import Footer from "./components/Footer";
 import { AuthProvider } from "./context/AuthContext";
 import { PrivateRoutes } from "./utils/PrivateRoutes";
 
+import { Toaster } from "./components/ui/toaster";
+
 function App() {
   return (
     <div className=" max-w-full max-h-full text-slate-400">
@@ -34,6 +36,7 @@ function App() {
 
           <Footer />
         </BrowserRouter>
+        <Toaster />
       </AuthProvider>
     </div>
   );
